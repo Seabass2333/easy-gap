@@ -1,5 +1,7 @@
-import React from 'react'
-import { redirect } from 'next/navigation'
+'use client'
+
+import React, { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import NavBar from '@/components/layout/navbar'
 import { useStore } from '@/lib/store/useStore'
 
@@ -8,16 +10,17 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode
 }) {
-  // In a real app with server components, we would use a server-side check
-  // For this demo, we're using client-side auth check but in a way that works
-  // with SSR
+  const router = useRouter()
+  const isAuthenticated = useStore((state) => state.isAuthenticated)
 
-  // This is a simple client-side auth check using localStorage
-  // In a real app, you would use a proper auth solution
-  const isAuthenticated = useStore.getState().isAuthenticated
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.push('/login')
+    }
+  }, [isAuthenticated, router])
 
   if (!isAuthenticated) {
-    redirect('/login')
+    return null // Return null during the redirect to prevent flash of content
   }
 
   return (

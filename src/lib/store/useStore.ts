@@ -20,7 +20,7 @@ interface AppState {
   messages: Message[];
 
   // Actions
-  login: (user: User) => void;
+  login: (userOrEmail: User | string, password?: string) => void;
   logout: () => void;
   addGapEntry: (entry: GapEntry) => void;
   updateGapEntry: (id: string, updates: Partial<GapEntry>) => void;
@@ -33,11 +33,11 @@ interface AppState {
 }
 
 // Mock data
-const mockUser: User = {
-  id: 'user1',
-  name: 'John Doe',
-  email: 'john@example.com',
-};
+// const mockUser: User = {
+//   id: 'user1',
+//   name: 'John Doe',
+//   email: 'john@example.com',
+// };
 
 const mockGapEntries: GapEntry[] = [
   {
@@ -117,7 +117,21 @@ export const useStore = create<AppState>()(
       messages: mockMessages,
 
       // Actions
-      login: (user) => set({ user, isAuthenticated: true }),
+      login: (userOrEmail, password) => {
+        if (typeof userOrEmail === 'string' && password) {
+          const email = userOrEmail;
+          const mockUserByEmail: User = {
+            id: 'user-' + Date.now(),
+            name: email.split('@')[0],
+            email: email
+          };
+          set({ user: mockUserByEmail, isAuthenticated: true });
+        } else if (typeof userOrEmail === 'object' && userOrEmail !== null) {
+          set({ user: userOrEmail, isAuthenticated: true });
+        } else {
+          console.error('Invalid login parameters');
+        }
+      },
       logout: () => set({ user: null, isAuthenticated: false }),
 
       addGapEntry: (entry) =>

@@ -1,25 +1,31 @@
 'use client'
 
-import React, { createContext, useRef, useContext } from 'react'
-import { useStore } from '@/lib/store/useStore'
-import type { StoreApi } from 'zustand'
+import { createContext, useContext } from 'react'
+import type { ReactNode } from 'react'
 
 interface StoreProviderProps {
-  children: React.ReactNode
+  children: ReactNode
 }
 
-const StoreContext = createContext<typeof useStore | null>(null)
+// 定义一个具体的上下文类型
+interface StoreContextType {
+  initialized: boolean // 添加一个简单的属性，防止空接口错误
+}
 
-export const StoreProvider = ({ children }: StoreProviderProps) => {
+const StoreContext = createContext<StoreContextType | null>(null)
+
+export function StoreProvider({ children }: StoreProviderProps) {
   return (
-    <StoreContext.Provider value={useStore}>{children}</StoreContext.Provider>
+    <StoreContext.Provider value={{ initialized: true }}>
+      {children}
+    </StoreContext.Provider>
   )
 }
 
 export const useStoreContext = () => {
-  const store = useContext(StoreContext)
-  if (!store) {
-    throw new Error('useStoreContext must be used within StoreProvider')
+  const context = useContext(StoreContext)
+  if (!context) {
+    throw new Error('useStoreContext must be used within a StoreProvider')
   }
-  return store
+  return context
 }

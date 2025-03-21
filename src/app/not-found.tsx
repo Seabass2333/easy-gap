@@ -1,19 +1,19 @@
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
 
 export default function NotFound() {
   return (
-    <div className='flex items-center justify-center min-h-screen p-5 text-center'>
-      <div>
-        <h1 className='text-6xl font-bold text-primary mb-2'>404</h1>
-        <h2 className='text-2xl font-semibold mb-6'>Page Not Found</h2>
-        <p className='text-muted-foreground mb-8 max-w-md mx-auto'>
-          The page you are looking for doesn't exist or has been moved.
-        </p>
-        <Link href='/'>
-          <Button>Return Home</Button>
-        </Link>
-      </div>
+    <div className='container flex h-[80vh] flex-col items-center justify-center'>
+      <h1 className='text-6xl font-bold'>404</h1>
+      <h2 className='mb-4 mt-2 text-xl'>Page Not Found</h2>
+      <p className='mb-8 max-w-md text-center text-muted-foreground'>
+        We couldn&apos;t find the page you&apos;re looking for. Please check the
+        URL or go back to the homepage.
+      </p>
+      <Link href='/'>
+        <span className='rounded-md bg-primary px-4 py-2 text-primary-foreground'>
+          Go Home
+        </span>
+      </Link>
     </div>
   )
 }

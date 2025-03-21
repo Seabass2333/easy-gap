@@ -1,80 +1,42 @@
-import React, { useState } from 'react'
+'use client'
+
+import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faGoogle } from '@fortawesome/free-solid-svg-icons'
+import { faGoogle } from '@fortawesome/free-brands-svg-icons'
 
-import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardFooter
-} from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
 import { useStore } from '@/lib/store/useStore'
 
-const LoginForm = () => {
+export function LoginForm() {
   const router = useRouter()
-  const login = useStore((state) => state.login)
-
+  const [isLoading, setIsLoading] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
+  const login = useStore((state) => state.login)
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setIsLoading(true)
 
-    // Simple validation
-    if (!email || !password) {
-      setError('Please fill in all fields')
-      return
+    try {
+      // 直接使用email和password登录
+      login(email, password)
+      router.push('/dashboard')
+    } catch (error) {
+      console.error('Login failed:', error)
+    } finally {
+      setIsLoading(false)
     }
-
-    // For demo purposes, we'll do a simple login
-    // In a real app, we would validate with an API
-    login({
-      id: 'user1',
-      name: 'John Doe',
-      email: email
-    })
-
-    router.push('/home')
-  }
-
-  const handleGoogleLogin = () => {
-    // For demo purposes only
-    login({
-      id: 'user1',
-      name: 'John Doe',
-      email: 'john@example.com'
-    })
-
-    router.push('/home')
   }
 
   return (
-    <Card className='w-full max-w-md mx-auto'>
-      <CardHeader className='space-y-1'>
-        <CardTitle className='text-2xl font-bold text-center'>Login</CardTitle>
-        <CardDescription className='text-center'>
-          Enter your email and password to login to your account
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form
-          onSubmit={handleLogin}
-          className='space-y-4'
-        >
-          {error && (
-            <div className='p-3 text-sm text-red-500 bg-red-50 rounded-md'>
-              {error}
-            </div>
-          )}
-
-          <div className='space-y-2'>
+    <div className='grid gap-6'>
+      <form onSubmit={handleSubmit}>
+        <div className='grid gap-4'>
+          <div className='grid gap-2'>
             <label
               htmlFor='email'
               className='text-sm font-medium'
@@ -83,15 +45,18 @@ const LoginForm = () => {
             </label>
             <Input
               id='email'
-              type='email'
               placeholder='name@example.com'
+              type='email'
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              autoCapitalize='none'
+              autoComplete='email'
+              autoCorrect='off'
+              disabled={isLoading}
               required
             />
           </div>
-
-          <div className='space-y-2'>
+          <div className='grid gap-2'>
             <div className='flex items-center justify-between'>
               <label
                 htmlFor='password'
@@ -108,57 +73,57 @@ const LoginForm = () => {
             </div>
             <Input
               id='password'
+              placeholder='••••••••'
               type='password'
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              autoCapitalize='none'
+              autoComplete='password'
+              autoCorrect='off'
+              disabled={isLoading}
               required
             />
           </div>
-
           <Button
             type='submit'
+            disabled={isLoading}
             className='w-full'
           >
-            Login
+            {isLoading ? 'Signing in...' : 'Sign In'}
           </Button>
-        </form>
-
-        <div className='relative my-6'>
-          <div className='absolute inset-0 flex items-center'>
-            <div className='w-full border-t border-gray-300'></div>
-          </div>
-          <div className='relative flex justify-center text-sm'>
-            <span className='bg-white dark:bg-gray-900 px-2 text-gray-500'>
-              Or continue with
-            </span>
-          </div>
         </div>
-
-        <Button
-          variant='outline'
-          className='w-full'
-          onClick={handleGoogleLogin}
+      </form>
+      <div className='relative'>
+        <div className='absolute inset-0 flex items-center'>
+          <span className='w-full border-t' />
+        </div>
+        <div className='relative flex justify-center text-xs uppercase'>
+          <span className='bg-background px-2 text-muted-foreground'>
+            Or continue with
+          </span>
+        </div>
+      </div>
+      <Button
+        variant='outline'
+        type='button'
+        disabled={isLoading}
+        className='w-full'
+      >
+        <FontAwesomeIcon
+          icon={faGoogle}
+          className='mr-2 h-4 w-4'
+        />
+        Google
+      </Button>
+      <div className='text-center text-sm'>
+        Don&apos;t have an account?{' '}
+        <Link
+          href='/register'
+          className='text-primary hover:underline'
         >
-          <FontAwesomeIcon
-            icon={faGoogle}
-            className='w-5 h-5 mr-2'
-          />
-          Sign in with Google
-        </Button>
-      </CardContent>
-      <CardFooter className='flex justify-center'>
-        <p className='text-sm text-muted-foreground'>
-          Don't have an account?{' '}
-          <Link
-            href='/register'
-            className='text-primary hover:underline'
-          >
-            Create an account
-          </Link>
-        </p>
-      </CardFooter>
-    </Card>
+          Sign Up
+        </Link>
+      </div>
+    </div>
   )
 }
-
-export default LoginForm

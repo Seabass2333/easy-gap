@@ -6,9 +6,9 @@ import { usePathname } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faHome,
-  faJournalWhills,
+  faCalendarDays,
   faUserGroup,
-  faTrophy,
+  faMessage,
   faUser
 } from '@fortawesome/free-solid-svg-icons'
 import { cn } from '@/lib/utils'
@@ -19,23 +19,23 @@ const NavBar = () => {
   const navItems = [
     {
       name: 'Home',
-      href: '/home',
+      href: '/dashboard',
       icon: faHome
     },
     {
-      name: 'Journal',
-      href: '/journal',
-      icon: faJournalWhills
+      name: 'Progress',
+      href: '/progress',
+      icon: faCalendarDays
     },
     {
-      name: 'Community',
+      name: 'Communities',
       href: '/communities',
       icon: faUserGroup
     },
     {
-      name: 'Achievements',
-      href: '/achievements',
-      icon: faTrophy
+      name: 'Messages',
+      href: '/messages',
+      icon: faMessage
     },
     {
       name: 'Profile',
@@ -45,8 +45,8 @@ const NavBar = () => {
   ]
 
   return (
-    <nav className='fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 z-10'>
-      <div className='flex justify-around items-center h-16'>
+    <nav className="fixed bottom-0 left-0 right-0 bg-background border-t border-border z-10">
+      <div className="flex justify-around items-center h-16">
         {navItems.map((item) => (
           <Link
             key={item.href}
@@ -55,12 +55,12 @@ const NavBar = () => {
               'flex flex-col items-center justify-center w-full h-full px-2 text-xs transition-colors',
               pathname === item.href
                 ? 'text-primary'
-                : 'text-gray-500 hover:text-gray-900 dark:hover:text-gray-100'
+                : 'text-muted-foreground hover:text-foreground'
             )}
           >
             <FontAwesomeIcon
               icon={item.icon}
-              className='h-6 w-6 mb-1'
+              className="h-5 w-5 mb-1"
             />
             <span>{item.name}</span>
           </Link>
