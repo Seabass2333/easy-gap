@@ -9,7 +9,7 @@
     --card-foreground: 0 0% 3.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 3.9%;
-    --primary: 196 76% 58%;
+    --primary: 196 76% 51%;
     --primary-foreground: 0 0% 98%;
     --secondary: 168 68% 59%;
     --secondary-foreground: 0 0% 9%;
@@ -21,8 +21,12 @@
     --destructive-foreground: 0 0% 98%;
     --border: 0 0% 89.8%;
     --input: 0 0% 89.8%;
-    --ring: 196 76% 58%;
+    --ring: 196 76% 51%;
     --radius: 0.5rem;
+
+    /* Gradient colors */
+    --brand-gradient-from: 196 76% 51%;
+    --brand-gradient-to: 183 70% 59%;
   }
 
   .dark {
@@ -32,7 +36,7 @@
     --card-foreground: 0 0% 98%;
     --popover: 0 0% 3.9%;
     --popover-foreground: 0 0% 98%;
-    --primary: 196 76% 58%;
+    --primary: 196 76% 51%;
     --primary-foreground: 0 0% 9%;
     --secondary: 168 68% 59%;
     --secondary-foreground: 0 0% 98%;
@@ -44,16 +48,73 @@
     --destructive-foreground: 0 0% 98%;
     --border: 0 0% 14.9%;
     --input: 0 0% 14.9%;
-    --ring: 196 76% 58%;
+    --ring: 196 76% 51%;
   }
 }
 
 @layer base {
   * {
     border: 0;
+    -webkit-tap-highlight-color: transparent;
   }
+
   body {
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
+
+  /* 移动设备应用样式 */
+  input,
+  button,
+  textarea,
+  select {
+    font: inherit;
+    color: inherit;
+  }
+
+  /* 渐变按钮 */
+  .bg-gradient {
+    background: linear-gradient(
+      to right,
+      hsl(var(--brand-gradient-from)),
+      hsl(var(--brand-gradient-to))
+    );
+  }
+
+  /* App 顶部状态栏样式 */
+  .status-bar {
+    background: linear-gradient(
+      to right,
+      hsl(var(--brand-gradient-from)),
+      hsl(var(--brand-gradient-to))
+    );
+  }
+
+  /* 卡片投影 */
+  .card-shadow {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+}
+
+/* 自定义滚动条 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+}
+
+/* 禁用双指缩放 */
+body {
+  touch-action: pan-x pan-y;
 }

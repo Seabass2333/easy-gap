@@ -2,12 +2,17 @@
 
 import React from 'react'
 import { useStore } from '@/lib/store/useStore'
-import { Card, CardContent, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faCalendarDays,
-  faGraduationCap
+  faGraduationCap,
+  faPlus,
+  faArrowRight
 } from '@fortawesome/free-solid-svg-icons'
+import { getInitials, formatDate } from '@/lib/utils'
 
 export default function DashboardPage() {
   const user = useStore((state) => state.user)
@@ -16,129 +21,190 @@ export default function DashboardPage() {
 
   const completedAchievements = achievements.filter((a) => a.completed).length
   const streakDays = 7 // Mock value for UI purposes
+  const today = new Date()
 
   return (
-    <div className='container py-6 space-y-6'>
-      <div className='flex justify-between items-center'>
-        <h1 className='text-2xl font-bold'>Hello, {user?.name || 'User'}</h1>
-        <div className='bg-primary/10 text-primary font-medium rounded-full px-3 py-1 text-sm'>
-          Day {streakDays}
+    <div className='container max-w-lg mx-auto p-4'>
+      <div className='flex items-center justify-between mb-6'>
+        <div>
+          <h1 className='text-2xl font-bold'>
+            Hello, {user?.name?.split(' ')[0] || 'there'}!
+          </h1>
+          <p className='text-muted-foreground'>{formatDate(today)}</p>
         </div>
+        <Avatar className='h-12 w-12'>
+          <AvatarImage
+            src={user?.avatar}
+            alt={user?.name}
+          />
+          <AvatarFallback>{getInitials(user?.name)}</AvatarFallback>
+        </Avatar>
       </div>
 
-      <section className='space-y-4'>
-        <h2 className='text-lg font-semibold'>Today&apos;s Overview</h2>
-        <div className='grid grid-cols-2 gap-4'>
-          <Card>
-            <CardContent className='p-4 flex flex-col items-center justify-center space-y-2'>
-              <FontAwesomeIcon
-                icon={faCalendarDays}
-                className='h-8 w-8 text-primary'
-              />
-              <CardTitle className='text-lg font-medium'>Gap Entries</CardTitle>
-              <p className='text-3xl font-bold'>{gapEntries.length}</p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className='p-4 flex flex-col items-center justify-center space-y-2'>
-              <FontAwesomeIcon
-                icon={faGraduationCap}
-                className='h-8 w-8 text-primary'
-              />
-              <CardTitle className='text-lg font-medium'>
-                Achievements
-              </CardTitle>
-              <p className='text-3xl font-bold'>
-                {completedAchievements}/{achievements.length}
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
-
-      <section className='space-y-4'>
-        <div className='flex justify-between items-center'>
-          <h2 className='text-lg font-semibold'>Mood Progress</h2>
-          <button className='text-primary text-sm'>View Details</button>
-        </div>
-
-        {/* Placeholder for mood chart */}
-        <Card className='h-40 flex items-center justify-center'>
-          <div className='flex space-x-3'>
+      <Card className='mb-6'>
+        <CardContent className='p-4'>
+          <h2 className='text-lg font-semibold mb-3'>How are you today?</h2>
+          <div className='grid grid-cols-5 gap-2 mb-4'>
             {['terrible', 'bad', 'neutral', 'good', 'great'].map((mood, i) => (
-              <div
+              <button
                 key={mood}
-                className='flex flex-col items-center'
+                className='flex flex-col items-center p-2 rounded-lg hover:bg-accent transition-colors'
               >
                 <div
-                  className={`w-6 h-6 rounded-full ${
+                  className={`h-10 w-10 rounded-full flex items-center justify-center ${
                     i === 0
                       ? 'bg-red-500'
                       : i === 1
-                      ? 'bg-orange-500'
+                      ? 'bg-orange-400'
                       : i === 2
-                      ? 'bg-yellow-500'
+                      ? 'bg-yellow-400'
                       : i === 3
-                      ? 'bg-green-500'
+                      ? 'bg-green-400'
                       : 'bg-emerald-500'
-                  }`}
-                />
-                <span className='text-xs mt-1'>{mood}</span>
-              </div>
-            ))}
-          </div>
-        </Card>
-      </section>
-
-      <section className='space-y-4'>
-        <div className='flex justify-between items-center'>
-          <h2 className='text-lg font-semibold'>Recent Entries</h2>
-          <button className='text-primary text-sm'>See All</button>
-        </div>
-
-        {gapEntries.length > 0 ? (
-          <div className='space-y-3'>
-            {gapEntries.slice(0, 3).map((entry) => (
-              <Card key={entry.id}>
-                <CardContent className='p-4'>
-                  <div className='flex justify-between items-start'>
-                    <div>
-                      <p className='font-medium'>{entry.date}</p>
-                      <p className='text-sm text-muted-foreground'>
-                        {entry.activities.join(', ')}
-                      </p>
-                    </div>
-                    <div
-                      className={`w-3 h-3 rounded-full ${
-                        entry.mood === 'great'
-                          ? 'bg-emerald-500'
-                          : entry.mood === 'good'
-                          ? 'bg-green-500'
-                          : entry.mood === 'neutral'
-                          ? 'bg-yellow-500'
-                          : entry.mood === 'bad'
-                          ? 'bg-orange-500'
-                          : 'bg-red-500'
-                      }`}
-                    />
-                  </div>
-                  <p className='text-sm mt-2 line-clamp-2'>{entry.notes}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        ) : (
-          <Card>
-            <CardContent className='p-4 flex flex-col items-center justify-center py-8'>
-              <p className='text-muted-foreground'>No entries yet</p>
-              <button className='mt-4 bg-primary text-white px-4 py-2 rounded-md'>
-                Add First Entry
+                  } text-white mb-1`}
+                >
+                  {i === 0
+                    ? '😞'
+                    : i === 1
+                    ? '🙁'
+                    : i === 2
+                    ? '😐'
+                    : i === 3
+                    ? '🙂'
+                    : '😄'}
+                </div>
+                <span className='text-xs capitalize'>{mood}</span>
               </button>
-            </CardContent>
-          </Card>
-        )}
-      </section>
+            ))}
+          </div>
+          <Button
+            className='w-full'
+            variant='gradient'
+          >
+            <FontAwesomeIcon
+              icon={faPlus}
+              className='mr-2 h-4 w-4'
+            />
+            Add Today&apos;s Entry
+          </Button>
+        </CardContent>
+      </Card>
+
+      <div className='grid grid-cols-2 gap-4 mb-6'>
+        <Card>
+          <CardContent className='p-4'>
+            <div className='flex items-center justify-between'>
+              <div>
+                <p className='text-muted-foreground text-sm'>Streak</p>
+                <p className='text-2xl font-bold'>{streakDays} Days</p>
+              </div>
+              <div className='h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center text-primary'>
+                <FontAwesomeIcon
+                  icon={faCalendarDays}
+                  className='h-5 w-5'
+                />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className='p-4'>
+            <div className='flex items-center justify-between'>
+              <div>
+                <p className='text-muted-foreground text-sm'>Achievements</p>
+                <p className='text-2xl font-bold'>
+                  {completedAchievements}/{achievements.length}
+                </p>
+              </div>
+              <div className='h-10 w-10 rounded-full bg-secondary/20 flex items-center justify-center text-secondary'>
+                <FontAwesomeIcon
+                  icon={faGraduationCap}
+                  className='h-5 w-5'
+                />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <h2 className='text-xl font-semibold mb-4'>Recent Activity</h2>
+      {gapEntries.length > 0 ? (
+        <div className='space-y-3'>
+          {gapEntries.slice(0, 3).map((entry) => (
+            <Card key={entry.id}>
+              <CardContent className='p-4'>
+                <div className='flex items-center justify-between mb-2'>
+                  <p className='font-medium'>{formatDate(entry.date)}</p>
+                  <div
+                    className={`h-6 w-6 rounded-full flex items-center justify-center ${
+                      entry.mood === 'great'
+                        ? 'bg-emerald-500'
+                        : entry.mood === 'good'
+                        ? 'bg-green-400'
+                        : entry.mood === 'neutral'
+                        ? 'bg-yellow-400'
+                        : entry.mood === 'bad'
+                        ? 'bg-orange-400'
+                        : 'bg-red-500'
+                    } text-white text-xs`}
+                  >
+                    {entry.mood === 'great'
+                      ? '😄'
+                      : entry.mood === 'good'
+                      ? '🙂'
+                      : entry.mood === 'neutral'
+                      ? '😐'
+                      : entry.mood === 'bad'
+                      ? '🙁'
+                      : '😞'}
+                  </div>
+                </div>
+                <div className='flex flex-wrap gap-1 mb-2'>
+                  {entry.activities.map((activity, index) => (
+                    <span
+                      key={index}
+                      className='text-xs bg-muted px-2 py-1 rounded-full'
+                    >
+                      {activity}
+                    </span>
+                  ))}
+                </div>
+                <p className='text-sm text-muted-foreground line-clamp-2'>
+                  {entry.notes}
+                </p>
+              </CardContent>
+            </Card>
+          ))}
+          <Button
+            variant='outline'
+            className='w-full flex items-center justify-center'
+          >
+            View All Entries{' '}
+            <FontAwesomeIcon
+              icon={faArrowRight}
+              className='ml-2 h-4 w-4'
+            />
+          </Button>
+        </div>
+      ) : (
+        <Card>
+          <CardContent className='p-6 text-center'>
+            <p className='text-muted-foreground'>
+              No recent activity. Add your first entry!
+            </p>
+            <Button
+              className='mt-4'
+              variant='outline'
+            >
+              <FontAwesomeIcon
+                icon={faPlus}
+                className='mr-2 h-4 w-4'
+              />
+              Add Entry
+            </Button>
+          </CardContent>
+        </Card>
+      )}
     </div>
   )
 }

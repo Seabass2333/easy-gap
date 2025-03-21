@@ -6,9 +6,9 @@ import { usePathname } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faHome,
-  faCalendarDays,
+  faChartLine,
   faUserGroup,
-  faMessage,
+  faComment,
   faUser
 } from '@fortawesome/free-solid-svg-icons'
 import { cn } from '@/lib/utils'
@@ -25,7 +25,7 @@ const NavBar = () => {
     {
       name: 'Progress',
       href: '/progress',
-      icon: faCalendarDays
+      icon: faChartLine
     },
     {
       name: 'Communities',
@@ -35,7 +35,7 @@ const NavBar = () => {
     {
       name: 'Messages',
       href: '/messages',
-      icon: faMessage
+      icon: faComment
     },
     {
       name: 'Profile',
@@ -45,24 +45,32 @@ const NavBar = () => {
   ]
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-background border-t border-border z-10">
-      <div className="flex justify-around items-center h-16">
+    <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-50">
+      <div className="flex justify-around items-center h-16 max-w-md mx-auto">
         {navItems.map((item) => (
           <Link
             key={item.href}
             href={item.href}
-            className={cn(
-              'flex flex-col items-center justify-center w-full h-full px-2 text-xs transition-colors',
+          >
+            <div className={cn(
+              'flex flex-col items-center justify-center w-16 py-2',
               pathname === item.href
                 ? 'text-primary'
-                : 'text-muted-foreground hover:text-foreground'
-            )}
-          >
-            <FontAwesomeIcon
-              icon={item.icon}
-              className="h-5 w-5 mb-1"
-            />
-            <span>{item.name}</span>
+                : 'text-gray-400'
+            )}>
+              <FontAwesomeIcon
+                icon={item.icon}
+                className={cn(
+                  'h-5 w-5 mb-1',
+                  pathname === item.href && 'text-primary'
+                )}
+              />
+              <span className="text-xs">{item.name}</span>
+              
+              {pathname === item.href && (
+                <div className="w-1.5 h-1.5 rounded-full bg-primary mt-1"></div>
+              )}
+            </div>
           </Link>
         ))}
       </div>

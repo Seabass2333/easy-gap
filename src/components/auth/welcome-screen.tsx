@@ -16,9 +16,9 @@ export function WelcomeScreen() {
   }
 
   return (
-    <div className='flex flex-col items-center justify-center w-full max-w-md mx-auto space-y-8'>
-      <div className='flex flex-col items-center space-y-2 text-center'>
-        <div className='relative w-40 h-40 mb-4'>
+    <div className='flex flex-col items-center justify-center w-full max-w-md mx-auto min-h-[calc(100vh-28px)] p-6'>
+      <div className='flex flex-col items-center space-y-4 text-center mb-10'>
+        <div className='w-64 h-48 relative mb-6'>
           <Image
             src='/images/welcome.jpg'
             alt='Welcome illustration'
@@ -30,21 +30,24 @@ export function WelcomeScreen() {
               target.style.display = 'flex'
               target.style.alignItems = 'center'
               target.style.justifyContent = 'center'
+              target.src =
+                'https://placehold.co/600x400?text=Welcome+to+GapRise'
             }}
           />
         </div>
         <h1 className='text-3xl font-bold'>Welcome to GapRise</h1>
-        <p className='text-muted-foreground'>
+        <p className='text-muted-foreground text-center max-w-xs'>
           Your personal career gap manager to help you track, plan, and optimize
           your career breaks.
         </p>
       </div>
 
-      <div className='space-y-4 w-full'>
+      <div className='space-y-4 w-full max-w-xs'>
         <Button
           onClick={handleGetStarted}
           className='w-full'
           size='lg'
+          variant='gradient'
         >
           Get Started
         </Button>

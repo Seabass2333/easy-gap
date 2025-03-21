@@ -33,96 +33,108 @@ export function LoginForm() {
   }
 
   return (
-    <div className='grid gap-6'>
-      <form onSubmit={handleSubmit}>
-        <div className='grid gap-4'>
-          <div className='grid gap-2'>
+    <div className='w-full max-w-[320px] mx-auto'>
+      <div className='mb-8 text-center'>
+        <div className='w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center mx-auto mb-4'>
+          <FontAwesomeIcon
+            icon={faGoogle}
+            className='h-6 w-6'
+          />
+        </div>
+        <h2 className='text-2xl font-bold'>Sign In</h2>
+        <p className='text-gray-500 text-sm mt-1'>Welcome back to GapRise</p>
+      </div>
+
+      <form
+        onSubmit={handleSubmit}
+        className='space-y-4'
+      >
+        <div className='space-y-2'>
+          <label
+            htmlFor='email'
+            className='text-sm font-medium block'
+          >
+            Email
+          </label>
+          <Input
+            id='email'
+            placeholder='name@example.com'
+            type='email'
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className='h-11'
+            required
+          />
+        </div>
+
+        <div className='space-y-2'>
+          <div className='flex justify-between'>
             <label
-              htmlFor='email'
+              htmlFor='password'
               className='text-sm font-medium'
             >
-              Email
+              Password
             </label>
-            <Input
-              id='email'
-              placeholder='name@example.com'
-              type='email'
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              autoCapitalize='none'
-              autoComplete='email'
-              autoCorrect='off'
-              disabled={isLoading}
-              required
-            />
+            <Link
+              href='/forgot-password'
+              className='text-xs text-primary'
+            >
+              Forgot Password?
+            </Link>
           </div>
-          <div className='grid gap-2'>
-            <div className='flex items-center justify-between'>
-              <label
-                htmlFor='password'
-                className='text-sm font-medium'
-              >
-                Password
-              </label>
-              <Link
-                href='/forgot-password'
-                className='text-sm text-primary hover:underline'
-              >
-                Forgot Password?
-              </Link>
-            </div>
-            <Input
-              id='password'
-              placeholder='••••••••'
-              type='password'
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              autoCapitalize='none'
-              autoComplete='password'
-              autoCorrect='off'
-              disabled={isLoading}
-              required
-            />
-          </div>
-          <Button
-            type='submit'
-            disabled={isLoading}
-            className='w-full'
-          >
-            {isLoading ? 'Signing in...' : 'Sign In'}
-          </Button>
+          <Input
+            id='password'
+            placeholder='••••••••'
+            type='password'
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className='h-11'
+            required
+          />
         </div>
-      </form>
-      <div className='relative'>
-        <div className='absolute inset-0 flex items-center'>
-          <span className='w-full border-t' />
-        </div>
-        <div className='relative flex justify-center text-xs uppercase'>
-          <span className='bg-background px-2 text-muted-foreground'>
-            Or continue with
-          </span>
-        </div>
-      </div>
-      <Button
-        variant='outline'
-        type='button'
-        disabled={isLoading}
-        className='w-full'
-      >
-        <FontAwesomeIcon
-          icon={faGoogle}
-          className='mr-2 h-4 w-4'
-        />
-        Google
-      </Button>
-      <div className='text-center text-sm'>
-        Don&apos;t have an account?{' '}
-        <Link
-          href='/register'
-          className='text-primary hover:underline'
+
+        <Button
+          type='submit'
+          className='w-full h-11'
+          variant='gradient'
         >
-          Sign Up
-        </Link>
+          {isLoading ? 'Signing in...' : 'Sign In'}
+        </Button>
+      </form>
+
+      <div className='mt-8 text-center space-y-4'>
+        <div className='relative'>
+          <div className='absolute inset-0 flex items-center'>
+            <span className='w-full border-t border-gray-200'></span>
+          </div>
+          <div className='relative flex justify-center text-xs uppercase'>
+            <span className='bg-background px-2 text-gray-500'>
+              or continue with
+            </span>
+          </div>
+        </div>
+
+        <div className='flex gap-4 justify-center'>
+          <button className='w-full flex items-center justify-center h-10 border border-gray-200 rounded-md hover:bg-gray-50'>
+            <span className='text-lg'>G</span>
+          </button>
+          <button className='w-full flex items-center justify-center h-10 border border-gray-200 rounded-md hover:bg-gray-50'>
+            <span className='text-lg'>A</span>
+          </button>
+          <button className='w-full flex items-center justify-center h-10 border border-gray-200 rounded-md hover:bg-gray-50'>
+            <span className='text-lg'>f</span>
+          </button>
+        </div>
+
+        <p className='text-sm text-gray-500'>
+          Don&apos;t have an account?{' '}
+          <Link
+            href='/register'
+            className='text-primary font-medium'
+          >
+            Sign Up
+          </Link>
+        </p>
       </div>
     </div>
   )

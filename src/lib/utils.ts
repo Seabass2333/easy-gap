@@ -5,19 +5,27 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function formatDate(date: Date | string) {
-  return new Date(date).toLocaleDateString("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  });
-}
+export function getInitials(name?: string): string {
+  if (!name) return "U";
 
-export function getInitials(name: string = "") {
-  if (!name) return "";
   return name
     .split(" ")
-    .map((n) => n[0])
+    .map((part) => part[0])
     .join("")
-    .toUpperCase();
+    .toUpperCase()
+    .slice(0, 2);
+}
+
+export function formatDate(date: string | Date): string {
+  if (!date) return "";
+
+  const d = typeof date === "string" ? new Date(date) : date;
+
+  if (isNaN(d.getTime())) return "";
+
+  return d.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric"
+  });
 } 
